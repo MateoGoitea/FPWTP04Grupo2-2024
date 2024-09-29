@@ -25,7 +25,7 @@ class Play extends Phaser.Scene{
 
         this.physics.add.collider(this.jugador, this.grupoMeteoros, this.gameOver, null, this);
 
-        this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontSize:'32px', fill:'#fff'});
+        this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontFamily: 'impact', fontSize:'32px', fill:'#fff'});
 
 
         this.anims.create({
