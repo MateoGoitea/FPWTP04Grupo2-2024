@@ -1,6 +1,6 @@
 import Menu from "./scenes/Menu.js";
 import Play from "./scenes/Play.js";
-import GameOver from "../scenes/GameOver.js";
+import GameOver from "./scenes/GameOver.js";
 import BonusTrack from "./scenes/BonusTrack.js";
 
 const config = {
