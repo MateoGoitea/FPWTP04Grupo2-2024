@@ -34,6 +34,7 @@ class Play extends Phaser.Scene{
         //colision entre el jugador y el asteroide
         this.physics.add.overlap(this.jugador,this.meteoroSpecial,this.bonusTrack,null,this);
        
+        
         this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontSize:'32px', fill:'#fff'});
 
 
@@ -73,14 +74,18 @@ class Play extends Phaser.Scene{
         this.scene.start('BonusTrack');
     }
 
-    update(){
+    movePlayer(){
         this.jugador.setVelocityX(0);
+
+        this.jugador.anims.play('normal', true);
 
         if (this.cursors.left.isDown) { //movimiento hacia la izquierda
         this.jugador.setVelocityX(-300);
+        this.jugador.anims.play('izquierda', true);
         } 
         else if (this.cursors.right.isDown) { //movimiento hacia la derecha
         this.jugador.setVelocityX(300);
+        this.jugador.anims.play('derecha', true);
         }
         else if (this.cursors.up.isDown) {  //movimiento hacia arriba
             this.jugador.setVelocityY(-300);
@@ -88,17 +93,12 @@ class Play extends Phaser.Scene{
         else if (this.cursors.down.isDown) {  //movimiento hacia abajo
             this.jugador.setVelocityY(300);
         }
+    }
 
-        this.jugador.anims.play('normal', true);
-        
-        if (this.cursors.left.isDown) {
-        this.jugador.setVelocityX(-300);
-        this.jugador.anims.play('izquierda', true);
-        }
-        else if (this.cursors.right.isDown) {
-        this.jugador.setVelocityX(300);
-        this.jugador.anims.play('derecha', true);
-        }
+
+    update(){
+
+        this.movePlayer();
 
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: '+this.puntaje);
