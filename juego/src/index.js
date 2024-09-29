@@ -1,5 +1,5 @@
 import Play from "./scenes/Play.js";
-//import GameOver from "../scenes/GameOver.js";
+import GameOver from "../scenes/GameOver.js";
 import BonusTrack from "./scenes/BonusTrack.js";
 
 const config = {
@@ -17,10 +17,7 @@ const config = {
         }
     },
 
-    //scene: Play
-    //scene: [Play,GameOver]
-    scene : [Play,BonusTrack]
-    //scene : BonusTrack
+    scene: [Play,GameOver,BonusTrack]
 };
 
 let game = new Phaser.Game(config);

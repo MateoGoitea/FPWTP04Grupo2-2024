@@ -9,14 +9,14 @@ class Play extends Phaser.Scene{
 
     preload(){
         this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
-        this.load.image('nave', '../juego/public/resources/img/naveespacial.png');
+        this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', {frameWidth:50 ,frameHeight:46});
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
         this.load.image('asteroides1', '../juego/public/resources/img/asteroides1.png');
     }
 
     create(){
         this.add.image(400,300,'cielo');
-        this.jugador = this.physics.add.sprite(400,550, 'nave');
+        this.jugador = this.physics.add.sprite(400,550, 'nave',1);
         this.jugador.setCollideWorldBounds(true);
 
         this.grupoMeteoros = this.physics.add.group();
@@ -34,6 +34,24 @@ class Play extends Phaser.Scene{
         //colision entre el jugador y el asteroide
         this.physics.add.overlap(this.jugador,this.meteoroSpecial,this.bonusTrack,null,this);
        
+        this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontSize:'32px', fill:'#fff'});
+
+
+        this.anims.create({
+            key:'izquierda',
+            frames: [{key:'nave', frame:0}],
+            frameRate: 20
+        });
+        this.anims.create({
+            key:'normal',
+            frames: [{key:'nave', frame:1}],
+            frameRate: 20
+        });
+        this.anims.create({
+            key:'derecha',
+            frames: [{key:'nave', frame:2}],
+            frameRate: 20
+        });
     }
 
     generarMeteoros() {
@@ -45,7 +63,9 @@ class Play extends Phaser.Scene{
     gameOver(jugador) {
         this.physics.pause(); // Pausar el juego
         jugador.setTint(0xff0000); // Cambiar color para indicar el choque
-        console.log('Game Over');  
+        console.log('Game Over');
+
+        this.scene.start('GameOver',{puntaje:this.puntaje});
     }
 
     
@@ -69,6 +89,19 @@ class Play extends Phaser.Scene{
             this.jugador.setVelocityY(300);
         }
 
+        this.jugador.anims.play('normal', true);
+        
+        if (this.cursors.left.isDown) {
+        this.jugador.setVelocityX(-300);
+        this.jugador.anims.play('izquierda', true);
+        }
+        else if (this.cursors.right.isDown) {
+        this.jugador.setVelocityX(300);
+        this.jugador.anims.play('derecha', true);
+        }
+
+        this.puntaje += 1;
+        this.textoDePuntaje.setText('Puntaje: '+this.puntaje);
     }
 }
 export default Play;
