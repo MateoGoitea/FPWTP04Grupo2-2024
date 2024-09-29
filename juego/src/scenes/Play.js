@@ -11,6 +11,7 @@ class Play extends Phaser.Scene{
         this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
         this.load.image('nave', '../juego/public/resources/img/naveespacial.png');
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
+        this.load.image('asteroides1', '../juego/public/resources/img/asteroides1.png');
     }
 
     create(){
@@ -25,7 +26,14 @@ class Play extends Phaser.Scene{
 
         this.physics.add.collider(this.jugador, this.grupoMeteoros, this.gameOver, null, this);
 
+        //asteroide que ser utilizara para enviar al bonus track
+        this.meteoroSpecial = this.physics.add.sprite(200,0,'asteroides1');
+        this.meteoroSpecial.setCollideWorldBounds(true);
 
+
+        //colision entre el jugador y el asteroide
+        this.physics.add.overlap(this.jugador,this.meteoroSpecial,this.bonusTrack,null,this);
+       
     }
 
     generarMeteoros() {
@@ -37,16 +45,30 @@ class Play extends Phaser.Scene{
     gameOver(jugador) {
         this.physics.pause(); // Pausar el juego
         jugador.setTint(0xff0000); // Cambiar color para indicar el choque
-        console.log('Game Over');
+        console.log('Game Over');  
     }
-            
+
+    
+    bonusTrack(){
+        this.scene.start('BonusTrack');
+    }
+
     update(){
         this.jugador.setVelocityX(0);
-        if (this.cursors.left.isDown) {
+
+        if (this.cursors.left.isDown) { //movimiento hacia la izquierda
         this.jugador.setVelocityX(-300);
-        } else if (this.cursors.right.isDown) {
+        } 
+        else if (this.cursors.right.isDown) { //movimiento hacia la derecha
         this.jugador.setVelocityX(300);
         }
+        else if (this.cursors.up.isDown) {  //movimiento hacia arriba
+            this.jugador.setVelocityY(-300);
+        }
+        else if (this.cursors.down.isDown) {  //movimiento hacia abajo
+            this.jugador.setVelocityY(300);
+        }
+
     }
 }
 export default Play;
