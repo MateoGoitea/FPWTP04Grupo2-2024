@@ -25,7 +25,7 @@ class Play extends Phaser.Scene{
 
         this.physics.add.collider(this.jugador, this.grupoMeteoros, this.gameOver, null, this);
 
-
+        this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontSize:'32px', fill:'#fff'});
     }
 
     generarMeteoros() {
@@ -38,15 +38,22 @@ class Play extends Phaser.Scene{
         this.physics.pause(); // Pausar el juego
         jugador.setTint(0xff0000); // Cambiar color para indicar el choque
         console.log('Game Over');
+
+        this.scene.start('GameOver',{puntaje:this.puntaje});
     }
             
     update(){
         this.jugador.setVelocityX(0);
+        
+        
         if (this.cursors.left.isDown) {
         this.jugador.setVelocityX(-300);
         } else if (this.cursors.right.isDown) {
         this.jugador.setVelocityX(300);
         }
+
+        this.puntaje += 1;
+        this.textoDePuntaje.setText('Puntaje: '+this.puntaje);
     }
 }
 export default Play;

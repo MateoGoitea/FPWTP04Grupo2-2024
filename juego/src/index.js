@@ -1,5 +1,5 @@
 import Play from "./scenes/Play.js";
-//import GameOver from "../scenes/GameOver.js";
+import GameOver from "./scenes/GameOver.js";
 
 const config = {
     type: Phaser.AUTO,
@@ -16,8 +16,7 @@ const config = {
         }
     },
 
-    scene: Play
-    //scene: [Play,GameOver]
+    scene: [Play,GameOver]
 };
 
 let game = new Phaser.Game(config);
