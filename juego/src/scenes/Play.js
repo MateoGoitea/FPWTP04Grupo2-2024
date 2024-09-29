@@ -11,6 +11,7 @@ class Play extends Phaser.Scene{
         this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
         this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', {frameWidth:50 ,frameHeight:46});
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
+        this.load.image('asteroides1', '../juego/public/resources/img/asteroides1.png');
     }
 
     create(){
@@ -25,7 +26,16 @@ class Play extends Phaser.Scene{
 
         this.physics.add.collider(this.jugador, this.grupoMeteoros, this.gameOver, null, this);
 
-        this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontSize:'32px', fill:'#fff'});
+        //asteroide que ser utilizara para enviar al bonus track
+        this.meteoroSpecial = this.physics.add.sprite(200,0,'asteroides1');
+        this.meteoroSpecial.setCollideWorldBounds(true);
+
+
+        //colision entre el jugador y el asteroide
+        this.physics.add.overlap(this.jugador,this.meteoroSpecial,this.bonusTrack,null,this);
+       
+        
+        this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontFamily: 'impact', fontSize:'32px', fill:'#fff'});
 
 
         this.anims.create({
@@ -58,19 +68,37 @@ class Play extends Phaser.Scene{
 
         this.scene.start('GameOver',{puntaje:this.puntaje});
     }
-            
-    update(){
+
+    
+    bonusTrack(){
+        this.scene.start('BonusTrack');
+    }
+
+    movePlayer(){
         this.jugador.setVelocityX(0);
+
         this.jugador.anims.play('normal', true);
-        
-        if (this.cursors.left.isDown) {
+
+        if (this.cursors.left.isDown) { //movimiento hacia la izquierda
         this.jugador.setVelocityX(-300);
         this.jugador.anims.play('izquierda', true);
-        }
-        else if (this.cursors.right.isDown) {
+        } 
+        else if (this.cursors.right.isDown) { //movimiento hacia la derecha
         this.jugador.setVelocityX(300);
         this.jugador.anims.play('derecha', true);
         }
+        else if (this.cursors.up.isDown) {  //movimiento hacia arriba
+            this.jugador.setVelocityY(-300);
+        }
+        else if (this.cursors.down.isDown) {  //movimiento hacia abajo
+            this.jugador.setVelocityY(300);
+        }
+    }
+
+
+    update(){
+
+        this.movePlayer();
 
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: '+this.puntaje);
