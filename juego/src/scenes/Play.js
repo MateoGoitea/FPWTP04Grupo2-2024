@@ -3,8 +3,7 @@ class Play extends Phaser.Scene{
         super("Play");
         this.jugador=null;
         this.cursors=null;
-        this.puntaje=0;
-        this.textoDePuntaje=0;
+        
     }
 
     preload(){
@@ -15,6 +14,9 @@ class Play extends Phaser.Scene{
     }
 
     create(){
+        this.puntaje=0;
+        this.textoDePuntaje=0;
+        
         this.add.image(400,300,'cielo');
         this.jugador = this.physics.add.sprite(400,550, 'nave',1);
         this.jugador.setCollideWorldBounds(true);
@@ -34,7 +36,7 @@ class Play extends Phaser.Scene{
         //colision entre el jugador y el asteroide
         this.physics.add.overlap(this.jugador,this.meteoroSpecial,this.bonusTrack,null,this);
        
-        
+
         this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontFamily: 'impact', fontSize:'32px', fill:'#fff'});
 
 
