@@ -1,6 +1,6 @@
 class GameOver extends Phaser.Scene{
     constructor(){
-
+        super ('GameOver');
     }
 
     init(data){
@@ -8,12 +8,16 @@ class GameOver extends Phaser.Scene{
     }
 
     create(){
-
-
+        this.add.text(400,200,'Game Over', {fontSize:'64px', fill: '#fff'}).setOrigin(0.5);
+        this.add.text(400,300,'Puntaje: '+this.puntaje, {fontSize: '32px', fill: '#fff'}).setOrigin(0.5);
+        this.add.text(400,400,'Barra espaciadora para volver a jugar', {fontSize: '32px', fill: '#fff'}).setOrigin(0.5);
+        
         this.input.keyboard.once('keydown-SPACE', () =>{
             this.scene.start('Play');
         })
     }
+
+
 }
 export default GameOver;
 
