@@ -8,7 +8,7 @@ class BonusTrack extends Phaser.Scene{
 
     preload(){
         this.load.image('espacio', '../juego/public/resources/img/espacio.jpg');
-        this.load.image('nave', '../juego/public/resources/img/naveespacial.png');
+        this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', {frameWidth:50 ,frameHeight:46});
 
         this.cursors = this.input.keyboard.createCursorKeys();
       
@@ -18,8 +18,28 @@ class BonusTrack extends Phaser.Scene{
         //ajusta la imagen al tamaño determinado en la variable config del index.js
         this.add.image(400,300,'espacio').setDisplaySize(this.sys.game.config.width,this.sys.game.config.height);
         
-        this.jugador = this.physics.add.sprite(400,550, 'nave');
+        this.jugador = this.physics.add.sprite(400,550, 'nave',1);
         this.jugador.setCollideWorldBounds(true);
+
+        this.animacionPlayer();
+    }
+
+    animacionPlayer(){
+        this.anims.create({
+            key:'izquierda',
+            frames: [{key:'nave', frame:0}],
+            frameRate: 20
+        });
+        this.anims.create({
+            key:'normal',
+            frames: [{key:'nave', frame:1}],
+            frameRate: 20
+        });
+        this.anims.create({
+            key:'derecha',
+            frames: [{key:'nave', frame:2}],
+            frameRate: 20
+        });
     }
 
     gameOver(jugador) {
@@ -31,11 +51,15 @@ class BonusTrack extends Phaser.Scene{
     movePlayer(){
         this.jugador.setVelocityX(0);
 
+        this.jugador.anims.play('normal', true);
+
         if (this.cursors.left.isDown) { //movimiento hacia la izquierda
         this.jugador.setVelocityX(-300);
+        this.jugador.anims.play('izquierda', true);
         } 
         else if (this.cursors.right.isDown) { //movimiento hacia la derecha
         this.jugador.setVelocityX(300);
+        this.jugador.anims.play('derecha', true);
         }
         else if (this.cursors.up.isDown) {  //movimiento hacia arriba
             this.jugador.setVelocityY(-300);
@@ -48,6 +72,6 @@ class BonusTrack extends Phaser.Scene{
     update(){
        this.movePlayer();
     }
-    
+
 }
 export default BonusTrack;

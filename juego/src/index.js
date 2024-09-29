@@ -1,6 +1,6 @@
 import Menu from "./scenes/Menu.js";
 import Play from "./scenes/Play.js";
-import GameOver from "../scenes/GameOver.js";
+//import GameOver from "../scenes/GameOver.js";
 import BonusTrack from "./scenes/BonusTrack.js";
 
 const config = {
@@ -18,7 +18,7 @@ const config = {
         }
     },
 
-    scene: [Menu,Play,GameOver,BonusTrack]
+    scene: [Menu,Play,BonusTrack]
 };
 
 let game = new Phaser.Game(config);
