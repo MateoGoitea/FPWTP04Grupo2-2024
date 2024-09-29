@@ -61,8 +61,10 @@ class Play extends Phaser.Scene{
             
     update(){
         this.jugador.setVelocityX(0);
+        this.jugador.setVelocityY(0);
         this.jugador.anims.play('normal', true);
         
+        //Mover el jugador en todas direcciones, sin embargo no se puede presionar dos a la vez
         if (this.cursors.left.isDown) {
         this.jugador.setVelocityX(-300);
         this.jugador.anims.play('izquierda', true);
@@ -70,6 +72,14 @@ class Play extends Phaser.Scene{
         else if (this.cursors.right.isDown) {
         this.jugador.setVelocityX(300);
         this.jugador.anims.play('derecha', true);
+        }
+        else if (this.cursors.up.isDown) {
+            this.jugador.setVelocityY(-300);
+            this.jugador.anims.play('normal', true);
+        }
+        else if (this.cursors.down.isDown) {
+            this.jugador.setVelocityY(300);
+            this.jugador.anims.play('normal', true);
         }
 
         this.puntaje += 1;
