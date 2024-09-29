@@ -8,9 +8,9 @@ class Play extends Phaser.Scene{
     }
 
     preload(){
-        this.load.image('cielo', '../public/resources/img/cielo.jpg');
-        this.load.image('nave', '../public/resources/img/naveespacial.png');
-        this.load.image('meteoro', '../public/resources/img/meteoro.png');
+        this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
+        this.load.image('nave', '../juego/public/resources/img/naveespacial.png');
+        this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
     }
 
     create(){
