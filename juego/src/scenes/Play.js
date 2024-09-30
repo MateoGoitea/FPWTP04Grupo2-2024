@@ -10,7 +10,7 @@ class Play extends Phaser.Scene{
         this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
         this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', {frameWidth:50 ,frameHeight:46});
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
-        this.load.image('asteroides1', '../juego/public/resources/img/asteroides1.png');
+        this.load.image('asteroide', '../juego/public/resources/img/asteroide.png');
     }
 
     create(){
@@ -29,7 +29,7 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.jugador, this.grupoMeteoros, this.gameOver, null, this);
 
         //asteroide que ser utilizara para enviar al bonus track
-        this.meteoroSpecial = this.physics.add.sprite(200,0,'asteroides1');
+        this.meteoroSpecial = this.physics.add.sprite(200,0,'asteroide');
         this.meteoroSpecial.setCollideWorldBounds(true);
 
 
