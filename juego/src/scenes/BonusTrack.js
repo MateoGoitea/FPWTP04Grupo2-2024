@@ -9,26 +9,12 @@ class BonusTrack extends Phaser.Scene{
     preload(){
         this.load.image('espacio', '../juego/public/resources/img/espacio.jpg');
         this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', {frameWidth:50 ,frameHeight:46});
-
         this.load.image('asteroide', '../juego/public/resources/img/asteroide.png');
+
+        this.load.audio('bonusAudio', '../juego/public/resources/audio/bonus.mp3');
 
         this.cursors = this.input.keyboard.createCursorKeys();
       
-    }
-
-    create(){
-        //ajusta la imagen al tamaño determinado en la variable config del index.js
-        this.add.image(400,300,'espacio').setDisplaySize(this.sys.game.config.width,this.sys.game.config.height);
-        
-        this.jugador = this.physics.add.sprite(400,550, 'nave',1);
-        this.jugador.setCollideWorldBounds(true);
-        
-        this.animacionPlayer();
-
-        this.grupoAsteroides = this.physics.add.group()
-        this.time.addEvent({delay:500, callback:this.generarAsteroides, callbackScope:this, loop:true});
-
-        this.physics.add.collider(this.jugador, this.grupoAsteroides, this.gameOver, null, this);
     }
 
     generarAsteroides(){
@@ -65,11 +51,35 @@ class BonusTrack extends Phaser.Scene{
         jugador.setTint(0xff0000); // Cambiar color para indicar el choque
         console.log('Game Over');  
 
+        this.bonusAudio.stop();
         this.scene.start('GameOver',{puntaje:this.puntaje});
     }
 
-    movePlayer(){
+    create(){
+        //ajusta la imagen al tamaño determinado en la variable config del index.js
+        this.add.image(400,300,'espacio').setDisplaySize(this.sys.game.config.width,this.sys.game.config.height);
         
+        //audio
+        this.bonusAudio = this.sound.add('bonusAudio');
+        const soundConfig = {
+            volume: 1,
+            loop: true
+        };
+        this.bonusAudio.play(soundConfig);
+
+        this.jugador = this.physics.add.sprite(400,550, 'nave',1);
+        this.jugador.setCollideWorldBounds(true);
+        
+        this.animacionPlayer();
+
+        this.grupoAsteroides = this.physics.add.group()
+        this.time.addEvent({delay:500, callback:this.generarAsteroides, callbackScope:this, loop:true});
+
+        this.physics.add.collider(this.jugador, this.grupoAsteroides, this.gameOver, null, this);
+    }
+
+    update(){
+        //Movimiento jugador
         this.jugador.setVelocityX(0);
         this.jugador.setVelocityY(0);
 
@@ -89,10 +99,6 @@ class BonusTrack extends Phaser.Scene{
         else if (this.cursors.down.isDown) {  //movimiento hacia abajo
             this.jugador.setVelocityY(300);
         }
-    }
-
-    update(){
-       this.movePlayer();
     }
 
 }

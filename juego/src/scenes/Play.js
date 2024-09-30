@@ -11,6 +11,28 @@ class Play extends Phaser.Scene{
         this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', {frameWidth:50 ,frameHeight:46});
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
         this.load.image('asteroide', '../juego/public/resources/img/asteroide.png');
+
+        this.load.audio('playAudio', '../juego/public/resources/audio/play.mp3');
+    }
+
+    generarMeteoros() {
+        const x = Phaser.Math.Between(0, 800); 
+        const meteoro = this.grupoMeteoros.create(x, 0, 'meteoro');
+        meteoro.setVelocityY(200); 
+    }
+
+    gameOver(jugador) {
+        this.physics.pause(); // Pausar el juego
+        jugador.setTint(0xff0000); // Cambiar color para indicar el choque
+        console.log('Game Over');
+        
+        this.playAudio.stop();
+        this.scene.start('GameOver',{puntaje:this.puntaje});
+    }
+ 
+    bonusTrack(){
+        this.playAudio.stop();
+        this.scene.start('BonusTrack');
     }
 
     create(){
@@ -18,6 +40,15 @@ class Play extends Phaser.Scene{
         this.textoDePuntaje=0;
         
         this.add.image(400,300,'cielo');
+
+        //audio
+        this.playAudio = this.sound.add('playAudio');
+        const soundConfig = {
+            volume: 1,
+            loop: true
+        };
+        this.playAudio.play(soundConfig);
+
         this.jugador = this.physics.add.sprite(400,550, 'nave',1);
         this.jugador.setCollideWorldBounds(true);
 
@@ -57,26 +88,8 @@ class Play extends Phaser.Scene{
         });
     }
 
-    generarMeteoros() {
-        const x = Phaser.Math.Between(0, 800); 
-        const meteoro = this.grupoMeteoros.create(x, 0, 'meteoro');
-        meteoro.setVelocityY(200); 
-    }
-
-    gameOver(jugador) {
-        this.physics.pause(); // Pausar el juego
-        jugador.setTint(0xff0000); // Cambiar color para indicar el choque
-        console.log('Game Over');
-
-        this.scene.start('GameOver',{puntaje:this.puntaje});
-    }
-
-    
-    bonusTrack(){
-        this.scene.start('BonusTrack');
-    }
-
-    movePlayer(){
+    update(){
+        //Movimiento del jugador
         this.jugador.setVelocityX(0);
         this.jugador.setVelocityY(0);
 
@@ -96,12 +109,6 @@ class Play extends Phaser.Scene{
         else if (this.cursors.down.isDown) {  //movimiento hacia abajo
             this.jugador.setVelocityY(300);
         }
-    }
-
-
-    update(){
-
-        this.movePlayer();
 
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: '+this.puntaje);
