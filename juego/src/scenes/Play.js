@@ -3,18 +3,20 @@ class Play extends Phaser.Scene{
         super("Play");
         this.jugador=null;
         this.cursors=null;
-        this.puntaje=0;
-        this.textoDePuntaje=0;
+        
     }
 
     preload(){
         this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
         this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', {frameWidth:50 ,frameHeight:46});
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
-        this.load.image('asteroides1', '../juego/public/resources/img/asteroides1.png');
+        this.load.image('asteroide', '../juego/public/resources/img/asteroide.png');
     }
 
     create(){
+        this.puntaje=0;
+        this.textoDePuntaje=0;
+        
         this.add.image(400,300,'cielo');
         this.jugador = this.physics.add.sprite(400,550, 'nave',1);
         this.jugador.setCollideWorldBounds(true);
@@ -27,14 +29,14 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.jugador, this.grupoMeteoros, this.gameOver, null, this);
 
         //asteroide que ser utilizara para enviar al bonus track
-        this.meteoroSpecial = this.physics.add.sprite(200,0,'asteroides1');
+        this.meteoroSpecial = this.physics.add.sprite(200,0,'asteroide');
         this.meteoroSpecial.setCollideWorldBounds(true);
 
 
         //colision entre el jugador y el asteroide
         this.physics.add.overlap(this.jugador,this.meteoroSpecial,this.bonusTrack,null,this);
        
-        
+
         this.textoDePuntaje = this.add.text(16,16,'Puntaje: 0', {fontFamily: 'impact', fontSize:'32px', fill:'#fff'});
 
 
