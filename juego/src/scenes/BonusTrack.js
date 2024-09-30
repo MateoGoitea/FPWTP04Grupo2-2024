@@ -71,6 +71,7 @@ class BonusTrack extends Phaser.Scene{
     movePlayer(){
         
         this.jugador.setVelocityX(0);
+        this.jugador.setVelocityY(0);
 
         this.jugador.anims.play('normal', true);
 
