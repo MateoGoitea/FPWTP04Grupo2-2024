@@ -76,6 +76,7 @@ class BonusTrack extends Phaser.Scene {
 
      
         this.time.delayedCall(30000, this.endBonusTrack, [], this);
+
     }
 
     collectCoin(jugador, moneda) {
@@ -109,6 +110,8 @@ class BonusTrack extends Phaser.Scene {
         else if (this.cursors.down.isDown) {
             this.jugador.setVelocityY(300);
         }
+
+        
     }
 }
 
