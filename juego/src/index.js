@@ -2,6 +2,7 @@ import Menu from "./scenes/Menu.js";
 import Play from "./scenes/Play.js";
 import GameOver from "./scenes/GameOver.js";
 import BonusTrack from "./scenes/BonusTrack.js";
+import Play02 from "./scenes/Play02.js";
 
 const config = {
     type: Phaser.AUTO,
@@ -18,7 +19,7 @@ const config = {
         }
     },
 
-    scene: [Menu,Play,GameOver,BonusTrack]
+    scene: [Menu,Play,GameOver,BonusTrack,Play02]
 };
 
 let game = new Phaser.Game(config);

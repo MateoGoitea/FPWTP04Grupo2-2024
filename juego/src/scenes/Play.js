@@ -83,6 +83,11 @@ class Play extends Phaser.Scene {
             frames: [{ key: 'nave', frame: 2 }],
             frameRate: 20
         });
+
+        //utilizado para acceder a la Play02
+        this.input.keyboard.once('keydown-SPACE', () =>{
+            this.scene.start('Play02');
+        });
     }
 
     update() {
