@@ -2,8 +2,9 @@ class Play02 extends Phaser.Scene{
 //de momento se accede presionando el espacio en la escena Play
     constructor(){
         super("Play02");
-        this.player = null;
+        this.jugador = null;
         this.cursors = null;
+        this.fireBall = null;
     }
 
     preload(){
@@ -11,6 +12,10 @@ class Play02 extends Phaser.Scene{
         this.load.image('fondoLayer01','../juego/public/resources/img/fondoLayer01.jpg');
         this.load.image('fondoLayer02','../juego/public/resources/img/fondoLayer02.jpg');
 
+        //fireBall
+        this.load.image('fireBall','../juego/public/resources/img/fireBall.png');
+    
+        //player y balas
         this.load.spritesheet('nave02', '../juego/public/resources/img/spritenave02.png', { frameWidth: 50, frameHeight: 46 });
         this.load.image('balaHorizontal', '../juego/public/resources/img/balaHorizontal.png ')
 
