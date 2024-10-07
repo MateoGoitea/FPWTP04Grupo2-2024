@@ -2,6 +2,7 @@ class Play extends Phaser.Scene {
     constructor() {
         super("Play");
         this.jugador = null;
+        this.bala = null;
         this.cursors = null;
     }
 
@@ -16,12 +17,22 @@ class Play extends Phaser.Scene {
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
         this.load.image('asteroide', '../juego/public/resources/img/asteroide.png');
         this.load.audio('playAudio', '../juego/public/resources/audio/play.mp3');
+        this.load.image('bala', '../juego/public/resources/img/balaVertical.png ')
     }
 
     generarMeteoros() {
         const x = Phaser.Math.Between(0, 800);
         const meteoro = this.grupoMeteoros.create(x, 0, 'meteoro');
         meteoro.setVelocityY(200);
+    }
+    
+    destruirMeteoro(bala){
+
+        bala.destroy();
+        
+        this.grupoMeteoros.children.each(function(meteoro) {
+            meteoro.destroy();
+        }, this);
     }
 
     gameOver(jugador) {
@@ -38,6 +49,7 @@ class Play extends Phaser.Scene {
         this.scene.start('BonusTrack', { puntaje: this.puntaje });
     }
 
+
     create() {
         this.add.image(400, 300, 'cielo');
 
@@ -49,25 +61,33 @@ class Play extends Phaser.Scene {
         };
         this.playAudio.play(soundConfig);
 
+        //creacion jugador
         this.jugador = this.physics.add.sprite(400, 550, 'nave', 1);
         this.jugador.setCollideWorldBounds(true);
 
+        //creacion de los inputs
+        this.cursors = this.input.keyboard.createCursorKeys();
+        this.cursors.z = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+    
+        //creacion meteoros
         this.grupoMeteoros = this.physics.add.group();
         this.time.addEvent({ delay: 1000, callback: this.generarMeteoros, callbackScope: this, loop: true });
-
-        this.cursors = this.input.keyboard.createCursorKeys();
-
+        
+        
+    
+        //control colision
         this.physics.add.collider(this.jugador, this.grupoMeteoros, this.gameOver, null, this);
+        
 
-       
+        //creacion meteoro para ingresar al bonus
         this.meteoroSpecial = this.physics.add.sprite(200, 0, 'asteroide');
         this.meteoroSpecial.setCollideWorldBounds(true);
-
-       
         this.physics.add.overlap(this.jugador, this.meteoroSpecial, this.bonusTrack, null, this);
-
+        
+        //muestra puntaje
         this.textoDePuntaje = this.add.text(16, 16, 'Puntaje: ' + this.puntaje, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
-
+        
+        //animacion del jugador
         this.anims.create({
             key: 'izquierda',
             frames: [{ key: 'nave', frame: 0 }],
@@ -91,6 +111,7 @@ class Play extends Phaser.Scene {
     }
 
     update() {
+        //controles del jugador
         this.jugador.setVelocityX(0);
         this.jugador.setVelocityY(0);
         this.jugador.anims.play('normal', true);
@@ -109,8 +130,20 @@ class Play extends Phaser.Scene {
         else if (this.cursors.down.isDown) {
             this.jugador.setVelocityY(300);
         }
-
         
+        if(this.cursors.z.isDown){
+            this.bala = this.physics.add.image(this.jugador.x, this.jugador.y - 20, 'bala');
+            this.bala.setVelocityY(-600);
+
+            this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
+            
+
+            //destruye la bala cuando sale de la pantalla para que no ocupe memoria
+            if(this.bala.y >= this.sys.game.config.height){
+                this.bala.destroy();
+            }
+        }
+
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
     }
