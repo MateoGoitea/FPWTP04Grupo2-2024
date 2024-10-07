@@ -17,7 +17,7 @@ class Play extends Phaser.Scene {
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
         this.load.image('asteroide', '../juego/public/resources/img/asteroide.png');
         this.load.audio('playAudio', '../juego/public/resources/audio/play.mp3');
-        this.load.image('bala', '../juego/public/resources/img/balaVertical.png ')
+        this.load.image('balaVertical', '../juego/public/resources/img/balaVertical.png ')
     }
 
     generarMeteoros() {
@@ -132,7 +132,7 @@ class Play extends Phaser.Scene {
         }
         
         if(this.cursors.z.isDown){
-            this.bala = this.physics.add.image(this.jugador.x, this.jugador.y - 20, 'bala');
+            this.bala = this.physics.add.image(this.jugador.x, this.jugador.y - 20, 'balaVertical');
             this.bala.setVelocityY(-600);
 
             this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
