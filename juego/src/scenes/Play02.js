@@ -13,6 +13,22 @@ class Play02 extends Phaser.Scene{
 
         this.load.spritesheet('nave02', '../juego/public/resources/img/spritenave02.png', { frameWidth: 50, frameHeight: 46 });
         this.load.image('balaHorizontal', '../juego/public/resources/img/balaHorizontal.png ')
+
+        this.load.image('enemigo', '../juego/public/resources/img/enemigo.png');
+    }
+
+    generarEnemigos() {
+        const y = Phaser.Math.Between(0, 600);
+        const enemigo = this.grupoEnemigos.create(this.sys.game.config.width, y, 'enemigo');
+        enemigo.setVelocityX(-200);
+    }
+
+    gameOver(jugador) {
+        this.physics.pause();
+        jugador.setTint(0xff0000);
+        console.log('Game Over');
+        //this.playAudio.stop();
+        this.scene.start('GameOver', { puntaje: this.puntaje });
     }
 
     create(){
@@ -27,6 +43,13 @@ class Play02 extends Phaser.Scene{
         //creacion de los inputs
         this.cursors = this.input.keyboard.createCursorKeys();
         this.cursors.z = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Z);
+
+        //creacion enemigos
+        this.grupoEnemigos = this.physics.add.group();
+        this.time.addEvent({ delay: 1000, callback: this.generarEnemigos, callbackScope: this, loop: true });
+
+        //control colision
+        this.physics.add.collider(this.jugador, this.grupoEnemigos, this.gameOver, null, this);
 
         //animacion del jugador
         this.anims.create({
