@@ -5,6 +5,8 @@ class Play02 extends Phaser.Scene{
         this.jugador = null;
         this.cursors = null;
         this.fireBall = null;
+        this.boss = null;
+        this.bossLife = 1000;
     }
 
     preload(){
@@ -20,6 +22,8 @@ class Play02 extends Phaser.Scene{
         this.load.image('balaHorizontal', '../juego/public/resources/img/balaHorizontal.png ')
 
         this.load.image('enemigo', '../juego/public/resources/img/enemigo.png');
+
+        this.load.spritesheet('boss', '../juego/public/resources/img/boss.png', { frameWidth: 190, frameHeight: 560 })
     }
 
     generarEnemigos() {
@@ -34,6 +38,20 @@ class Play02 extends Phaser.Scene{
         console.log('Game Over');
         //this.playAudio.stop();
         this.scene.start('GameOver', { puntaje: this.puntaje });
+    }
+
+    mostrarBoss(){
+        this.textoDePuntaje = this.add.text(16, 16, 'BOSS: ' + this.bossLife, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
+        //el boss entra lentamente a la pantalla, seguramente hay una forma menos tosca de hacerlo pero es lo q se me ocurrio xd
+        this.boss.setVelocityX(-100);
+    }
+
+    danarBoss(bala){
+        bala.destroy();
+        
+        this.bossLife -= 1;
+
+        this.textoDePuntaje.setText('BOSS: ' + this.bossLife);
     }
 
     create(){
@@ -72,6 +90,23 @@ class Play02 extends Phaser.Scene{
             frames: [{ key: 'nave02', frame: 0 }],
             frameRate: 20
         });
+
+
+        //boss
+        this.boss = this.physics.add.sprite(900, 300, 'boss', 0);
+        this.boss.setCollideWorldBounds(true);
+    
+            //animacion
+        this.anims.create({
+            key: 'defaultBoss',
+            frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 3 }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.boss.anims.play('defaultBoss', true);
+
+        //el delay se cambiara a 3000 para q el boss aparezca 30 seg despues de entrar al nivel, esta en 500 para testear
+        this.time.addEvent({ delay: 500, callback: this.mostrarBoss, callbackScope: this, loop: false });
     }
 
     update(){
@@ -112,6 +147,8 @@ class Play02 extends Phaser.Scene{
             this.bala.setVelocityX(600);
 
             //this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
+
+            this.physics.add.collider(this.bala, this.boss, this.danarBoss, null, this);
             
 
             //destruye la bala cuando sale de la pantalla para que no ocupe memoria
@@ -119,6 +156,14 @@ class Play02 extends Phaser.Scene{
                 this.bala.destroy();
             }
         }
+        
+        //boss
+            // control de posicion x del boss para q se quede quieto al entrar a escena
+        if (this.boss.x <= 700){
+            this.boss.setVelocityX(0);
+        }
+
+        
     }
 }  
 export default Play02;
