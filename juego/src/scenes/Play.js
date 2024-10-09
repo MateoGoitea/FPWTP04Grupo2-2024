@@ -26,13 +26,9 @@ class Play extends Phaser.Scene {
         meteoro.setVelocityY(200);
     }
     
-    destruirMeteoro(bala){
-
+    destruirMeteoro(bala,meteoro){
         bala.destroy();
-        
-        this.grupoMeteoros.children.each(function(meteoro) {
-            meteoro.destroy();
-        }, this);
+        meteoro.destroy();
     }
 
     gameOver(jugador) {
