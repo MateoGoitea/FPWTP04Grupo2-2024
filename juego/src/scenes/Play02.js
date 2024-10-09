@@ -32,6 +32,11 @@ class Play02 extends Phaser.Scene{
         enemigo.setVelocityX(-200);
     }
 
+    eliminarEnemigo(bala,enemigo){
+        bala.destroy();
+        enemigo.destroy();
+    }
+
     gameOver(jugador) {
         this.physics.pause();
         jugador.setTint(0xff0000);
@@ -149,6 +154,9 @@ class Play02 extends Phaser.Scene{
             //this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
 
             this.physics.add.collider(this.bala, this.boss, this.danarBoss, null, this);
+
+            //balas y enemigos
+            this.physics.add.collider( this.bala ,this.grupoEnemigos, this.eliminarEnemigo, null, this);
             
 
             //destruye la bala cuando sale de la pantalla para que no ocupe memoria
