@@ -6,16 +6,17 @@ class Play02 extends Phaser.Scene{
         this.cursors = null;
         this.fireBall = null;
         this.boss = null;
-        this.bossLife = 1000;
+        this.bossLife = 300;
+    }
+     init(data) {
+        //this.puntaje = data.puntaje || 0; 
+        this.puntaje = data.puntaje; 
     }
 
     preload(){
         //son la misma imagen solo que una está volteada para que el layer no se vea cortado
         this.load.image('fondoLayer01','../juego/public/resources/img/fondoLayer01.jpg');
         this.load.image('fondoLayer02','../juego/public/resources/img/fondoLayer02.jpg');
-
-        //audio
-        this.load.audio('bossAudio', '../juego/public/resources/audio/boss.mp3');
 
         //fireBall
         this.load.image('fireBall','../juego/public/resources/img/fireBall.png');
@@ -38,18 +39,22 @@ class Play02 extends Phaser.Scene{
     eliminarEnemigo(bala,enemigo){
         bala.destroy();
         enemigo.destroy();
+        this.puntaje +=10;
+        this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
+
     }
 
     gameOver(jugador) {
         this.physics.pause();
         jugador.setTint(0xff0000);
         console.log('Game Over');
-        this.bossAudio.stop();
+        //this.playAudio.stop();
         this.scene.start('GameOver', { puntaje: this.puntaje });
     }
 
     mostrarBoss(){
-        this.textoDePuntaje = this.add.text(16, 16, 'BOSS: ' + this.bossLife, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
+        //this.textoDePuntaje = this.add.text(16, 50, 'BOSS: ' + this.bossLife, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
+        this.textoDeJefe = this.add.text(16, 50, 'BOSS: ' + this.bossLife, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
         //el boss entra lentamente a la pantalla, seguramente hay una forma menos tosca de hacerlo pero es lo q se me ocurrio xd
         this.boss.setVelocityX(-100);
     }
@@ -58,22 +63,30 @@ class Play02 extends Phaser.Scene{
         bala.destroy();
         
         this.bossLife -= 1;
-
-        this.textoDePuntaje.setText('BOSS: ' + this.bossLife);
+        this.puntaje +=1;
+        
+        this.textoDeJefe.setText('BOSS: ' + this.bossLife);
+        this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
     }
+    
+    
+    victoria() {
+        
+        //this.playAudio.stop();
+        this.sound.stopAll();
+        this.scene.start('Victoria', { puntaje: this.puntaje });
+
+    }
+			
+			
 
     create(){
+		this.bossLife=300;
         //almacenan las imagenes en una variable
         this.fondoLayer01 = this.add.image(0,300,'fondoLayer01').setOrigin(0,0.5);
         this.fondoLayer02 = this.add.image(800,300,'fondoLayer02').setOrigin(0,0.5);
-    
-        //audio
-        this.bossAudio = this.sound.add('bossAudio');
-        const soundConfig = {
-            volume: 1,
-            loop: true
-        };
-        this.bossAudio.play(soundConfig);
+        
+        this.textoDePuntaje = this.add.text(16, 16, 'Puntaje: ' + this.puntaje, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
 
         //creacion jugador
         this.jugador = this.physics.add.sprite(10, 300, 'nave02', 1);
@@ -89,7 +102,6 @@ class Play02 extends Phaser.Scene{
 
         //control colision
         this.physics.add.collider(this.jugador, this.grupoEnemigos, this.gameOver, null, this);
-        this.physics.add.collider(this.jugador, this.boss, this.gameOver, null, this);
 
         //animacion del jugador
         this.anims.create({
@@ -110,7 +122,8 @@ class Play02 extends Phaser.Scene{
 
 
         //boss
-        this.boss = this.physics.add.sprite(1000, 300, 'boss', 0);
+        this.boss = this.physics.add.sprite(900, 300, 'boss', 0);
+        this.boss.setCollideWorldBounds(true);
     
             //animacion
         this.anims.create({
@@ -121,8 +134,8 @@ class Play02 extends Phaser.Scene{
         });
         this.boss.anims.play('defaultBoss', true);
 
-        //el delay se cambiara a 30000 para q el boss aparezca 30 seg despues de entrar al nivel, esta en 500 para testear
-        this.time.addEvent({ delay: 10000, callback: this.mostrarBoss, callbackScope: this, loop: false });
+        //el delay se cambiara a 3000 para q el boss aparezca 30 seg despues de entrar al nivel, esta en 500 para testear
+        this.time.addEvent({ delay: 500, callback: this.mostrarBoss, callbackScope: this, loop: false });
     }
 
     update(){
@@ -162,19 +175,33 @@ class Play02 extends Phaser.Scene{
             this.bala = this.physics.add.image(this.jugador.x + 20, this.jugador.y, 'balaHorizontal');
             this.bala.setVelocityX(600);
 
+            //this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
+
             this.physics.add.collider(this.bala, this.boss, this.danarBoss, null, this);
 
             //balas y enemigos
             this.physics.add.collider( this.bala ,this.grupoEnemigos, this.eliminarEnemigo, null, this);
             
+
+            //destruye la bala cuando sale de la pantalla para que no ocupe memoria
+            if(this.bala.y >= this.sys.game.config.width){
+                this.bala.destroy();
+            }
         }
         
         //boss
             // control de posicion x del boss para q se quede quieto al entrar a escena
         if (this.boss.x <= 700){
             this.boss.setVelocityX(0);
-            this.boss.setCollideWorldBounds(true);
         }
+        
+        
+        
+        if (this.bossLife== 0){
+			
+		console.log('Gano');
+		this.victoria();
+		}
 
         
     }

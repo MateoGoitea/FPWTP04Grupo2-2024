@@ -4,20 +4,36 @@ class Play extends Phaser.Scene {
         this.jugador = null;
         this.bala = null;
         this.cursors = null;
+        this.puntaje=0;
     }
 
-    init(data) {
+   /* init(data) {
         
         this.puntaje = data.puntaje || 0;
-    }
+    }*/
 
     preload() {
         this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
-        this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', { frameWidth: 50, frameHeight: 46 });
+        //this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', { frameWidth: 50, frameHeight: 46 });
         this.load.image('meteoro', '../juego/public/resources/img/meteoro.png');
         this.load.image('asteroide', '../juego/public/resources/img/asteroide.png');
         this.load.audio('playAudio', '../juego/public/resources/audio/play.mp3');
         this.load.image('balaVertical', '../juego/public/resources/img/balaVertical.png ')
+        
+        this.load.spritesheet({
+            	key:'nave',
+				url: '../juego/public/resources/img/spritenaveB.png',
+				frameConfig: {
+					frameWidth: 50,
+					frameHeight: 46,
+					startFrame:0,
+					endFrame: 5
+					
+					}
+				});
+        
+      
+        
     }
 
     generarMeteoros() {
@@ -29,8 +45,6 @@ class Play extends Phaser.Scene {
     destruirMeteoro(bala,meteoro){
         bala.destroy();
         meteoro.destroy();
-        //destruir un meteoro da 100 puntos
-        this.puntaje += 100;
     }
 
     gameOver(jugador) {
@@ -49,6 +63,7 @@ class Play extends Phaser.Scene {
 
 
     create() {
+		this.puntaje=0;
         this.add.image(400, 300, 'cielo');
 
        
@@ -88,25 +103,33 @@ class Play extends Phaser.Scene {
         //animacion del jugador
         this.anims.create({
             key: 'izquierda',
-            frames: [{ key: 'nave', frame: 0 }],
-            frameRate: 20
+            //frames: [{ key: 'nave', frame: 0 }],
+            frames: this.anims.generateFrameNumbers('nave', {frames:[0,1]}),
+            frameRate: 20,
+            repeat:-1
         });
         this.anims.create({
             key: 'normal',
-            frames: [{ key: 'nave', frame: 1 }],
-            frameRate: 20
+            //frames: [{ key: 'nave', frame: 1 }],
+            frames: this.anims.generateFrameNumbers('nave', {frames:[2,3]}),
+            frameRate: 20,
+            repeat:-1
         });
         this.anims.create({
             key: 'derecha',
-            frames: [{ key: 'nave', frame: 2 }],
-            frameRate: 20
+            frames: this.anims.generateFrameNumbers('nave', {frames:[4,5]}),
+        //  frames: [{ key: 'nave', frame: 2 }],
+            frameRate: 20,
+			repeat:-1
+            
         });
+        
+			
 
         //utilizado para acceder a la Play02
-        this.input.keyboard.once('keydown-SPACE', () =>{
-            this.playAudio.stop();
-            this.scene.start('Play02');
-        });
+       // this.input.keyboard.once('keydown-SPACE', () =>{
+       //     this.scene.start('Play02');
+       // });
     }
 
     update() {
@@ -131,21 +154,20 @@ class Play extends Phaser.Scene {
         }
         
         if(this.cursors.z.isDown){
-            this.bala = this.physics.add.image(this.jugador.x, this.jugador.y - 20, 'balaVertical');
+			this.bala = this.physics.add.image(this.jugador.x, this.jugador.y - 20, 'balaVertical');
             this.bala.setVelocityY(-600);
 
             this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
-    
+            
+
+            //destruye la bala cuando sale de la pantalla para que no ocupe memoria
+            if(this.bala.y >= this.sys.game.config.height){
+                this.bala.destroy();
+            }
         }
 
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
-
-        //si se alcanza los puntos indicados se pasa al nivel 2
-        if (this.puntaje>=30000){
-            this.playAudio.stop();
-            this.scene.start('Play02');
-        }
     }
 }
 
