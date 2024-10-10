@@ -7,10 +7,10 @@ class Play extends Phaser.Scene {
         this.puntaje=0;
     }
 
-   /* init(data) {
+    init(data) {
         
-        this.puntaje = data.puntaje || 0;
-    }*/
+        this.puntaje = data.puntaje || 0;;
+    }
 
     preload() {
         this.load.image('cielo', '../juego/public/resources/img/cielo.jpg');
@@ -31,9 +31,6 @@ class Play extends Phaser.Scene {
 					
 					}
 				});
-        
-      
-        
     }
 
     generarMeteoros() {
@@ -63,7 +60,7 @@ class Play extends Phaser.Scene {
 
 
     create() {
-		this.puntaje=0;
+		//this.puntaje=0;
         this.add.image(400, 300, 'cielo');
 
        
@@ -127,9 +124,9 @@ class Play extends Phaser.Scene {
 			
 
         //utilizado para acceder a la Play02
-       // this.input.keyboard.once('keydown-SPACE', () =>{
-       //     this.scene.start('Play02');
-       // });
+        /*this.input.keyboard.once('keydown-SPACE', () =>{
+            this.scene.start('Play02');
+        });*/
     }
 
     update() {
@@ -168,6 +165,11 @@ class Play extends Phaser.Scene {
 
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
+
+        if (this.puntaje >= 2000){
+            this.playAudio.stop();
+            this.scene.start('Play02', { puntaje: this.puntaje });
+        }
     }
 }
 

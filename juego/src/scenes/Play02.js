@@ -197,7 +197,7 @@ class Play02 extends Phaser.Scene{
         
         
         
-        if (this.bossLife== 0){
+        if (this.bossLife <= 0){
 			
 		console.log('Gano');
 		this.victoria();
