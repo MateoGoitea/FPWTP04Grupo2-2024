@@ -75,7 +75,7 @@ class BonusTrack extends Phaser.Scene {
         this.textoDePuntaje = this.add.text(16, 16, 'Puntaje: ' + this.puntaje, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
 
      
-        this.time.delayedCall(30000, this.endBonusTrack, [], this);
+        this.time.delayedCall(10000, this.endBonusTrack, [], this);
 
     }
 

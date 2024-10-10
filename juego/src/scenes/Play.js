@@ -29,6 +29,8 @@ class Play extends Phaser.Scene {
     destruirMeteoro(bala,meteoro){
         bala.destroy();
         meteoro.destroy();
+        //destruir un meteoro da 100 puntos
+        this.puntaje += 100;
     }
 
     gameOver(jugador) {
@@ -142,6 +144,11 @@ class Play extends Phaser.Scene {
 
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
+
+        //si se alcanza los 10000 puntos se pasa al nivel 2
+        if (this.puntaje>=30000){
+            this.scene.start('Play02');
+        }
     }
 }
 
