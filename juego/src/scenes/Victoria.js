@@ -40,7 +40,7 @@ class Victoria extends Phaser.Scene{
 		this.neb2 = this.add.image(400,300, 'neb2');
 		
 		
-        this.add.text(400,200,'Ud. a derrotado al Maligno', {fontFamily: 'impact', fontSize:'48px', fill: '#fff'}).setOrigin(0.5);
+        this.add.text(400,200,'Ud. ha derrotado al Maligno', {fontFamily: 'impact', fontSize:'48px', fill: '#fff'}).setOrigin(0.5);
         this.add.text(400,300,'Puntaje: '+this.puntaje, {fontFamily: 'impact', fontSize: '32px', fill: '#fff'}).setOrigin(0.5);
         this.add.text(400,400,'Barra espaciadora para volver a jugar', {fontFamily: 'impact', fontSize: '32px', fill: '#fff'}).setOrigin(0.5);
         
