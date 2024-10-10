@@ -16,7 +16,7 @@ class BonusTrack extends Phaser.Scene {
 
     preload() {
         this.load.image('espacio', '../juego/public/resources/img/espacio.jpg');
-        this.load.spritesheet('nave', '../juego/public/resources/img/spritenave.png', { frameWidth: 50, frameHeight: 46 });
+        this.load.spritesheet('nave', '../juego/public/resources/img/spritenaveB.png', { frameWidth: 50, frameHeight: 46 });
         this.load.spritesheet('moneda', '../juego/public/resources/img/monedas.png', { frameWidth: 32, frameHeight: 32 });
         this.load.audio('bonusAudio', '../juego/public/resources/audio/bonus.mp3');
         this.cursors = this.input.keyboard.createCursorKeys();
@@ -88,7 +88,7 @@ class BonusTrack extends Phaser.Scene {
     endBonusTrack() {
         this.bonusAudio.stop();
         
-        this.scene.start('Play', { puntaje: this.puntaje });
+        this.scene.start('Play02', { puntaje: this.puntaje });
     }
 
     update() {
