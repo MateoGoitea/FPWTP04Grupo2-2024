@@ -30,6 +30,18 @@ class BonusTrack extends Phaser.Scene {
         moneda.setScale(0.7);
     }
 
+    collectCoin(jugador, moneda) {
+        moneda.destroy();
+        this.puntaje += 500; 
+        this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
+    }
+
+    endBonusTrack() {
+        this.bonusAudio.stop();
+        
+        this.scene.start('Play', { puntaje: this.puntaje });
+    }
+
     animacionPlayer() {
         this.anims.create({
             key: 'izquierda',
@@ -79,17 +91,7 @@ class BonusTrack extends Phaser.Scene {
 
     }
 
-    collectCoin(jugador, moneda) {
-        moneda.destroy();
-        this.puntaje += 500; 
-        this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
-    }
-
-    endBonusTrack() {
-        this.bonusAudio.stop();
-        
-        this.scene.start('Play02', { puntaje: this.puntaje });
-    }
+    
 
     update() {
         this.jugador.setVelocityX(0);

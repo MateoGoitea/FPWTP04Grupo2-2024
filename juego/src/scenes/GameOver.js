@@ -47,7 +47,14 @@ class GameOver extends Phaser.Scene{
         
         this.input.keyboard.once('keydown-SPACE', () =>{
 			this.sound.stopAll(); ///// Detiene la musique que se ejecute.
-            this.scene.start('Play');
+
+			if (this.puntaje <=2000){
+				this.scene.start('Play');
+			}
+			if(this.puntaje >=2000){
+				this.scene.start('Play02');
+			}
+            
         })
     }
    //////////////////// Animación Fondo ///////////////////////////// 
