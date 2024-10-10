@@ -29,6 +29,8 @@ class Play extends Phaser.Scene {
     destruirMeteoro(bala,meteoro){
         bala.destroy();
         meteoro.destroy();
+        //destruir un meteoro da 100 puntos
+        this.puntaje += 100;
     }
 
     gameOver(jugador) {
@@ -102,6 +104,7 @@ class Play extends Phaser.Scene {
 
         //utilizado para acceder a la Play02
         this.input.keyboard.once('keydown-SPACE', () =>{
+            this.playAudio.stop();
             this.scene.start('Play02');
         });
     }
@@ -132,16 +135,17 @@ class Play extends Phaser.Scene {
             this.bala.setVelocityY(-600);
 
             this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
-            
-
-            //destruye la bala cuando sale de la pantalla para que no ocupe memoria
-            if(this.bala.y >= this.sys.game.config.height){
-                this.bala.destroy();
-            }
+    
         }
 
         this.puntaje += 1;
         this.textoDePuntaje.setText('Puntaje: ' + this.puntaje);
+
+        //si se alcanza los puntos indicados se pasa al nivel 2
+        if (this.puntaje>=30000){
+            this.playAudio.stop();
+            this.scene.start('Play02');
+        }
     }
 }
 
