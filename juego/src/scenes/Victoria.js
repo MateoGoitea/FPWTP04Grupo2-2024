@@ -49,7 +49,7 @@ class Victoria extends Phaser.Scene{
 			this.sound.stopAll(); ///// Detiene la musique que se ejecute.
 			this.bossLife=300;
 			this.puntaje=0;
-			this.scene.start('Play');
+			this.scene.start('Play', { puntaje: this.puntaje });
         })
     }
    //////////////////// Animación Fondo ///////////////////////////// 
