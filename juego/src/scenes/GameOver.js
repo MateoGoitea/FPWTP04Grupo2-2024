@@ -49,10 +49,10 @@ class GameOver extends Phaser.Scene{
 			this.sound.stopAll(); ///// Detiene la musique que se ejecute.
 
 			if (this.puntaje <=2000){
-				this.scene.start('Play', { puntaje: this.puntaje });
+				this.scene.start('Play');
 			}
 			if(this.puntaje >=2000){
-				this.scene.start('Play02', { puntaje: this.puntaje });
+				this.scene.start('Play02');
 			}
             
         })
