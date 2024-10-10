@@ -14,6 +14,9 @@ class Play02 extends Phaser.Scene{
         this.load.image('fondoLayer01','../juego/public/resources/img/fondoLayer01.jpg');
         this.load.image('fondoLayer02','../juego/public/resources/img/fondoLayer02.jpg');
 
+        //audio
+        this.load.audio('bossAudio', '../juego/public/resources/audio/boss.mp3');
+
         //fireBall
         this.load.image('fireBall','../juego/public/resources/img/fireBall.png');
     
@@ -41,7 +44,7 @@ class Play02 extends Phaser.Scene{
         this.physics.pause();
         jugador.setTint(0xff0000);
         console.log('Game Over');
-        //this.playAudio.stop();
+        this.bossAudio.stop();
         this.scene.start('GameOver', { puntaje: this.puntaje });
     }
 
@@ -63,6 +66,14 @@ class Play02 extends Phaser.Scene{
         //almacenan las imagenes en una variable
         this.fondoLayer01 = this.add.image(0,300,'fondoLayer01').setOrigin(0,0.5);
         this.fondoLayer02 = this.add.image(800,300,'fondoLayer02').setOrigin(0,0.5);
+    
+        //audio
+        this.bossAudio = this.sound.add('bossAudio');
+        const soundConfig = {
+            volume: 1,
+            loop: true
+        };
+        this.bossAudio.play(soundConfig);
 
         //creacion jugador
         this.jugador = this.physics.add.sprite(10, 300, 'nave02', 1);
@@ -78,6 +89,7 @@ class Play02 extends Phaser.Scene{
 
         //control colision
         this.physics.add.collider(this.jugador, this.grupoEnemigos, this.gameOver, null, this);
+        this.physics.add.collider(this.jugador, this.boss, this.gameOver, null, this);
 
         //animacion del jugador
         this.anims.create({
@@ -98,8 +110,7 @@ class Play02 extends Phaser.Scene{
 
 
         //boss
-        this.boss = this.physics.add.sprite(900, 300, 'boss', 0);
-        this.boss.setCollideWorldBounds(true);
+        this.boss = this.physics.add.sprite(1000, 300, 'boss', 0);
     
             //animacion
         this.anims.create({
@@ -110,8 +121,8 @@ class Play02 extends Phaser.Scene{
         });
         this.boss.anims.play('defaultBoss', true);
 
-        //el delay se cambiara a 3000 para q el boss aparezca 30 seg despues de entrar al nivel, esta en 500 para testear
-        this.time.addEvent({ delay: 500, callback: this.mostrarBoss, callbackScope: this, loop: false });
+        //el delay se cambiara a 30000 para q el boss aparezca 30 seg despues de entrar al nivel, esta en 500 para testear
+        this.time.addEvent({ delay: 10000, callback: this.mostrarBoss, callbackScope: this, loop: false });
     }
 
     update(){
@@ -151,24 +162,18 @@ class Play02 extends Phaser.Scene{
             this.bala = this.physics.add.image(this.jugador.x + 20, this.jugador.y, 'balaHorizontal');
             this.bala.setVelocityX(600);
 
-            //this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
-
             this.physics.add.collider(this.bala, this.boss, this.danarBoss, null, this);
 
             //balas y enemigos
             this.physics.add.collider( this.bala ,this.grupoEnemigos, this.eliminarEnemigo, null, this);
             
-
-            //destruye la bala cuando sale de la pantalla para que no ocupe memoria
-            if(this.bala.y >= this.sys.game.config.width){
-                this.bala.destroy();
-            }
         }
         
         //boss
             // control de posicion x del boss para q se quede quieto al entrar a escena
         if (this.boss.x <= 700){
             this.boss.setVelocityX(0);
+            this.boss.setCollideWorldBounds(true);
         }
 
         
