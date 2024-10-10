@@ -125,6 +125,7 @@ class Play extends Phaser.Scene {
 
         //utilizado para acceder a la Play02
         /*this.input.keyboard.once('keydown-SPACE', () =>{
+            this.playAudio.stop();
             this.scene.start('Play02');
         });*/
     }

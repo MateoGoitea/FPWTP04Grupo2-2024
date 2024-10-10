@@ -7,6 +7,7 @@ class Play02 extends Phaser.Scene{
         this.fireBall = null;
         this.boss = null;
         this.bossLife = 300;
+        this.controlBossColision = null;
     }
      init(data) {
         //this.puntaje = data.puntaje || 0; 
@@ -17,6 +18,9 @@ class Play02 extends Phaser.Scene{
         //son la misma imagen solo que una está volteada para que el layer no se vea cortado
         this.load.image('fondoLayer01','../juego/public/resources/img/fondoLayer01.jpg');
         this.load.image('fondoLayer02','../juego/public/resources/img/fondoLayer02.jpg');
+
+        //audio
+        this.load.audio('bossAudio', '../juego/public/resources/audio/boss.mp3');
 
         //fireBall
         this.load.image('fireBall','../juego/public/resources/img/fireBall.png');
@@ -48,12 +52,13 @@ class Play02 extends Phaser.Scene{
         this.physics.pause();
         jugador.setTint(0xff0000);
         console.log('Game Over');
-        //this.playAudio.stop();
+        this.bossAudio.stop();
         this.scene.start('GameOver', { puntaje: this.puntaje });
     }
 
     mostrarBoss(){
         //this.textoDePuntaje = this.add.text(16, 50, 'BOSS: ' + this.bossLife, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
+        this.boss.y=300;
         this.textoDeJefe = this.add.text(16, 50, 'BOSS: ' + this.bossLife, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
         //el boss entra lentamente a la pantalla, seguramente hay una forma menos tosca de hacerlo pero es lo q se me ocurrio xd
         this.boss.setVelocityX(-100);
@@ -82,9 +87,17 @@ class Play02 extends Phaser.Scene{
 
     create(){
 		this.bossLife=300;
+        this.controlBossColision = false;
         //almacenan las imagenes en una variable
         this.fondoLayer01 = this.add.image(0,300,'fondoLayer01').setOrigin(0,0.5);
         this.fondoLayer02 = this.add.image(800,300,'fondoLayer02').setOrigin(0,0.5);
+
+        this.bossAudio = this.sound.add('bossAudio');
+        const soundConfig = {
+            volume: 1,
+            loop: true
+        };
+        this.bossAudio.play(soundConfig);
         
         this.textoDePuntaje = this.add.text(16, 16, 'Puntaje: ' + this.puntaje, { fontFamily: 'impact', fontSize: '32px', fill: '#fff' });
 
@@ -122,8 +135,7 @@ class Play02 extends Phaser.Scene{
 
 
         //boss
-        this.boss = this.physics.add.sprite(900, 300, 'boss', 0);
-        this.boss.setCollideWorldBounds(true);
+        this.boss = this.physics.add.sprite(900, 900, 'boss', 0);
     
             //animacion
         this.anims.create({
@@ -135,7 +147,7 @@ class Play02 extends Phaser.Scene{
         this.boss.anims.play('defaultBoss', true);
 
         //el delay se cambiara a 3000 para q el boss aparezca 30 seg despues de entrar al nivel, esta en 500 para testear
-        this.time.addEvent({ delay: 500, callback: this.mostrarBoss, callbackScope: this, loop: false });
+        this.time.addEvent({ delay: 20000, callback: this.mostrarBoss, callbackScope: this, loop: false });
     }
 
     update(){
@@ -177,7 +189,7 @@ class Play02 extends Phaser.Scene{
 
             //this.physics.add.collider(this.bala, this.grupoMeteoros, this.destruirMeteoro, null, this);
 
-            this.physics.add.collider(this.bala, this.boss, this.danarBoss, null, this);
+            
 
             //balas y enemigos
             this.physics.add.collider( this.bala ,this.grupoEnemigos, this.eliminarEnemigo, null, this);
@@ -193,6 +205,14 @@ class Play02 extends Phaser.Scene{
             // control de posicion x del boss para q se quede quieto al entrar a escena
         if (this.boss.x <= 700){
             this.boss.setVelocityX(0);
+            this.controlBossColision = true;
+            this.boss.setCollideWorldBounds(true);
+        }
+    
+        //el boss no tiene colisiones con nada hasta haberse establecido completamente en escena
+        if (this.controlBossColision == true){
+            this.physics.add.collider(this.bala, this.boss, this.danarBoss, null, this);
+            this.physics.add.collider(this.jugador, this.boss, this.gameOver, null, this);
         }
         
         
